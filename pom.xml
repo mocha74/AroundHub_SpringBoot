@@ -8,11 +8,14 @@
 		<version>2.7.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>studio.thinkground</groupId>
-	<artifactId>aroundhub</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>Aroundhub</artifactId>
+	<version>1.0.0</version>
+	<packaging>jar</packaging>
+
 	<name>AroundHub_SpringBoot</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Spring Boot Project for Education</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
@@ -23,15 +26,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
