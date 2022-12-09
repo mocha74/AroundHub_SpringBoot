@@ -1,7 +1,7 @@
 package studio.thinkground.aroundhub.data.dto;
 
 import lombok.*;
-import studio.thinkground.aroundhub.entity.ProductEntity;
+import studio.thinkground.aroundhub.data.entity.ProductEntity;
 
 @Data
 @NoArgsConstructor

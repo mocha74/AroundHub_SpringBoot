@@ -58,6 +58,12 @@
 			<artifactId>h2</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
