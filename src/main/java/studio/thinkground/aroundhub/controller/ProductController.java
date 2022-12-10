@@ -3,9 +3,13 @@ package studio.thinkground.aroundhub.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import studio.thinkground.aroundhub.data.dto.ProductDto;
 import studio.thinkground.aroundhub.service.ProductService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/product-api")
@@ -33,14 +37,28 @@ public class ProductController {
 
     // http://localhost:8080/api/v1/product-api/product
     @PostMapping(value = "/product")
-    public ProductDto createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
+
+        // Validation Code Example
+        if(productDto.getProductId().equals("") || productDto.getProductId().isEmpty()) {
+            LOGGER.error("[createProduct] failed Reponse :: productId is Empty");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(productDto);
+        }
+
+        long startTime = System.currentTimeMillis();
 
         String productId = productDto.getProductId();
         String productName = productDto.getProductName();
         int productPrice = productDto.getProductPrice();
         int productStock = productDto.getProductStock();
 
-        return productService.saveProduct(productId, productName, productPrice, productStock);
+        ProductDto response = productService.saveProduct(productId, productName, productPrice, productStock);
+
+        LOGGER.info("[ProductController] Response :: productId = {}, productName = {}, productPrice = {}, productStock = {}, Response Time = {}ms",
+                productDto.getProductId(), productDto.getProductName(), productDto.getProductPrice(), productDto.getProductStock(),
+                (System.currentTimeMillis() - startTime));
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     // http:localhost8080/api/v1/product-api/product/{productId}
