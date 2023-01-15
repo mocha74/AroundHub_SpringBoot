@@ -37,8 +37,35 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         String originalUrl) {
 
         LOGGER.info("[getShortUrl] Response DTO : {}", originalUrl);
+        ShortUrlEntity getShortUrlEntity = shortUrlDAO.getShortUrl(originalUrl);
 
-        return null;
+        String orgUrl;
+        String shortUrl;
+
+        if(getShortUrlEntity == null) {
+            LOGGER.info("[getShortUrl] No Entity in Database.");
+            ResponseEntity<NaverUriDto> responseEntity = requestShortUrl(clientId, clientSecret, originalUrl);
+
+            orgUrl = responseEntity.getBody().getResult().getOrgUrl();
+            shortUrl = responseEntity.getBody().getResult().getUrl();
+            String hash = responseEntity.getBody().getResult().getHash();
+
+            ShortUrlEntity shortUrlEntity = new ShortUrlEntity();
+            shortUrlEntity.setOrgUrl(orgUrl);
+            shortUrlEntity.setUrl(shortUrl);
+            shortUrlEntity.setHash(hash);
+
+            shortUrlDAO.saveShortUrl(shortUrlEntity);
+        } else {
+            orgUrl = getShortUrlEntity.getOrgUrl();
+            shortUrl = getShortUrlEntity.getUrl();
+        }
+
+        ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(orgUrl, shortUrl);
+
+        LOGGER.info("[getShortUrl] Response DTO : {}", shortUrlResponseDto.toString());
+        return shortUrlResponseDto;
+
     }
 
     @Override
@@ -72,14 +99,26 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     }
 
     @Override
-    public ShortUrlResponseDto deleteByShortUrl(String shortUrl) {
-        return null;
+    public void deleteShortUrl(String url) {
+        if(url.contains("me2.do")) {
+            LOGGER.info("[deleteShortUrl] Reqeust Url is 'ShortUrl'.");
+            deleteByShortUrl(url);
+        } else {
+            LOGGER.info("[deleteShortUrl] Request Url is 'Original Url'.");
+            deleteByOriginalUrl(url);
+        }
     }
 
-    @Override
-    public ShortUrlResponseDto deleteByOriginalUrl(String originalUrl) {
-        return null;
+    private void deleteByShortUrl(String url) {
+        LOGGER.info("[deleteByShortUrl] delete record");
+        shortUrlDAO.deleteByShortUrl(url);
     }
+
+    private void deleteByOriginalUrl(String url) {
+        LOGGER.info("[deleteByOriginalUrl] delete record");
+        shortUrlDAO.deleteByOriginalUrl(url);
+    }
+
 
     private ResponseEntity<NaverUriDto> requestShortUrl(String clientId, String clientSecret, String originalUrl) {
         LOGGER.info("[requestShortUrl] client ID : ***, client Secret : ***, original URL : {}", originalUrl);
